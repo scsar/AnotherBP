@@ -30,4 +30,11 @@ public class WeaphonData : ScriptableObject
     {
         get { return weaphonCode; }
     }
+
+    [SerializeField]
+    private string weaphonGrade;
+    public string Wgrade
+    {
+        get { return weaphonGrade; }
+    }
 }
