@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CreatureName: TestMonster
   MaxHp: 0
-  CreatureImage: {fileID: 0}
+  CreatureImage: {fileID: -167909793, guid: 17728f47536832c4eb41e12473304993, type: 3}
   CreatureCode: 0
