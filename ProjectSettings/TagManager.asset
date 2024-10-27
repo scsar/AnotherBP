@@ -11,6 +11,7 @@ TagManager:
   - Item
   - NPC
   - Root
+  - Projectile
   layers:
   - Default
   - TransparentFX

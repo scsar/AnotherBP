@@ -47,22 +47,41 @@ public class Weaphon : MonoBehaviour
 
     [SerializeField]
     private GameObject SummonEffectPrefab;
+    private float summonDuration = 5f;
+    private float summonInterval = 1f; 
+    [SerializeField]
+    private GameObject SummonCreature;
+
+    private bool guardActive;
+    private bool returnActive;
 
     void Awake()
     {
         _wRigidbody = GetComponent<Rigidbody2D>();
         GetComponent<SpriteRenderer>().sprite = weaphonData.Wicon;
-
-        damage = weaphonData.Wdamage;
         playerThrow = false;
+        guardActive = false;
+        returnActive = false;
     }
 
     public void UpdateWeaphon()
     {
         // 무기 데이터를 현재 인벤토리에 선택되어있는 무기의 정보로 갱신한다. 
         weaphonData = GameObject.FindWithTag("Inventory").GetComponent<Inventory>().curWeaphon;
+        damage = weaphonData.Wdamage;
         // 무기의 스프라이트(이미지)를 변경한다.
         GetComponent<SpriteRenderer>().sprite = weaphonData.Wicon;
+
+        if (weaphonData.WAbilityCode == (int)WeaphonAbility.Guard)
+        {
+            guardActive = true;
+            StartCoroutine(A_Guard());
+        }
+        if (weaphonData.WAbilityCode == (int)WeaphonAbility.Return)
+        {
+            StartCoroutine(A_Return());
+        }
+
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -78,13 +97,16 @@ public class Weaphon : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Monster") && playerThrow)
         {
-            playerThrow = false;
             Ability(other.gameObject.GetComponent<Creature>());
 
             Vector2 direction = (transform.position - other.transform.position).normalized;
             _wRigidbody.AddForce(direction * 10, ForceMode2D.Impulse);
             _wRigidbody.velocity = Vector2.zero;
+        }
 
+        if (other.gameObject.CompareTag("Projectile") && guardActive)
+        {
+            Destroy(other.gameObject);
         }
     }
 
@@ -93,6 +115,26 @@ public class Weaphon : MonoBehaviour
         if (GetComponent<Rigidbody2D>().velocity.x > 1)
         {
             _wRigidbody.rotation -= 5.0f;
+        }
+
+
+        if (returnActive)
+        {
+            Transform player = GameObject.FindGameObjectWithTag("Player").transform;
+            Vector2 directionToPlayer = (player.position - transform.position).normalized;
+            transform.position = Vector2.MoveTowards(transform.position, player.position, 30 * Time.deltaTime);
+
+            float distanceToPlayer = Mathf.Abs(Vector2.Distance(player.position, transform.position));
+
+            if ( distanceToPlayer > 5)
+            {
+                gameObject.GetComponent<CircleCollider2D>().isTrigger = true;
+            }
+            else 
+            {
+                gameObject.GetComponent<CircleCollider2D>().isTrigger = false;
+            }
+
         }
     }
     
@@ -193,14 +235,49 @@ public class Weaphon : MonoBehaviour
         }
 
     }
-    void A_Summon()
+    void A_Summon(float power)
     {
-        GameObject Summon = Instantiate(SummonEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(Summon , 5f);
+        StartCoroutine(SummonRoutine(power));
+    }
+
+    private IEnumerator SummonRoutine(float power)
+    {
+        GameObject summon = Instantiate(SummonEffectPrefab, transform.position, Quaternion.identity);
+        float timer = 0;
+        summonDuration *= power;
+        Destroy(summon, summonDuration);
+        // summonDuration 동안 summonInterval 간격으로 소환수를 생성
+        while (timer <= summonDuration)
+        {
+            GameObject summonCreature = Instantiate(SummonCreature, summon.transform.position, Quaternion.identity);
+            summonCreature.transform.SetParent(summon.transform, false);
+            summonCreature.transform.position = summon.transform.position;
+            yield return new WaitForSeconds(summonInterval);
+            timer += summonInterval;
+        }
     }
     void A_FishingStaff(){}
-    void A_Guard(){}
-    void A_Return(){}
+
+    IEnumerator A_Guard()
+    {
+        yield return new WaitForSeconds(0.1f);
+        _wRigidbody.velocity = Vector2.zero;
+        _wRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
+        float timer = 0f;
+        while (timer < 5f)
+        {
+            timer += Time.deltaTime;
+            transform.Rotate(0f, 0f, 10f);
+            yield return null;
+        }
+        _wRigidbody.constraints = RigidbodyConstraints2D.None;
+        guardActive = false;
+    }
+    IEnumerator A_Return()
+    {
+        yield return new WaitForSeconds(2f);
+        returnActive = true;        
+    }
 
     void Ability(Creature creature)
     {
@@ -220,18 +297,11 @@ public class Weaphon : MonoBehaviour
                 A_Lightning(A_power, creature.transform);
                 break;
             case WeaphonAbility.Summon :
-                A_Summon();
+                A_Summon(A_power);
                 break;
             case WeaphonAbility.FishingStaff :
                 A_FishingStaff();
                 break;
-            case WeaphonAbility.Guard :
-                A_Guard();
-                break;
-            case WeaphonAbility.Return :
-                A_Return();
-                break;
         }
     }
-
 }

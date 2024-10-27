@@ -22,7 +22,7 @@ public class Creature : MonoBehaviour
         {
             hp = value;
 
-            if (hp < 0)
+            if (hp <= 0)
             {
                 hp = 0;
                 isDead = true;
@@ -87,10 +87,12 @@ public class Creature : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Weaphon"))
+        if (other.gameObject.CompareTag("Weaphon") && other.GetComponent<Weaphon>().playerThrow)
         {
             Weaphon weaphon = other.gameObject.GetComponent<Weaphon>();
             C_hp -= weaphon.damage;
+
+            weaphon.playerThrow = false;
         }
     }
 

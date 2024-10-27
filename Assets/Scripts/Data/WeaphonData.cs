@@ -21,7 +21,7 @@ public class WeaphonData : ScriptableObject
     }
 
     [SerializeField]
-    private float weaphonDamage;
+    private float weaphonDamage = 0;
     public float Wdamage
     {
         get { return weaphonDamage; }
