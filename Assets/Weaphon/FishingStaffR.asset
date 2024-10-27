@@ -16,4 +16,5 @@ MonoBehaviour:
   weaphonIcon: {fileID: -1593163697, guid: b6512577d8c21244b92669c039974554, type: 3}
   weaphonDamage: 0
   weaphonCode: 15
-  weaphonGrade: R
+  weaphonGrade: 2
+  AbilityCode: 5
