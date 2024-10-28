@@ -133,6 +133,8 @@ MonoBehaviour:
   lightningEffectPrefab: {fileID: 4752436145714515399, guid: 03920e0d915455f49ad8f3ece8184331, type: 3}
   SummonEffectPrefab: {fileID: 5746142032286382036, guid: 856e9a706c2b45349975e29d20f0a336, type: 3}
   SummonCreature: {fileID: 2815320177228375587, guid: 7082ea0af1dc4564593ff53cd38afaea, type: 3}
+  fish: {fileID: 6144234903050213912, guid: 2a56cd343cd3506449b744cbcc8f1c51, type: 3}
+  SplashEffectPrefab: {fileID: 10562011796681025, guid: 535985915fae326448a7afb2e86b82f0, type: 3}
 --- !u!58 &-2179827831358723994
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -55,6 +55,13 @@ public class Weaphon : MonoBehaviour
     private bool guardActive;
     private bool returnActive;
 
+    [SerializeField]
+    private GameObject fish;
+    [SerializeField]
+    private GameObject SplashEffectPrefab;
+
+
+
     void Awake()
     {
         _wRigidbody = GetComponent<Rigidbody2D>();
@@ -256,7 +263,14 @@ public class Weaphon : MonoBehaviour
             timer += summonInterval;
         }
     }
-    void A_FishingStaff(){}
+    void A_FishingStaff()
+    {
+        GameObject splashEffect = Instantiate(SplashEffectPrefab, transform.position, Quaternion.identity);
+        GameObject fishes = Instantiate(fish, transform.position, Quaternion.identity);
+
+        Destroy(splashEffect, 0.5f);
+        
+    }
 
     IEnumerator A_Guard()
     {
