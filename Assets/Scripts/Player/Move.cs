@@ -141,10 +141,10 @@ public class Move : MonoBehaviour
                 keys[0].UpdateAction(() => moveSpeed = 150 , () => moveSpeed = 250);
                 keys[1].UpdateAction(() => moveSpeed = 150 , () => moveSpeed = 250);
             }
-            }
-            else
-            {
-                moveSpeed = 150;
+        }
+        else
+        {
+            moveSpeed = 150;
         }
         
 
@@ -155,7 +155,7 @@ public class Move : MonoBehaviour
         // 슬라이딩중이 아니고 뛰고있지않을떄.
         if (!isSliding && playerController.Stamina != 70f)
         {
-            if ( !playerController.StaminaEmpty && moveSpeed <= 150 || isStoped)
+            if ( moveSpeed <= 150 || isStoped)
                 playerController.Stamina += 1f;
         }
         if (!isStoped)
@@ -165,15 +165,14 @@ public class Move : MonoBehaviour
     void PMove()
     {
         // 오른쪽을 눌르고 있을때, 슬라이딩을 수행하고 뗄때 종료한다.
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(1) && !isSliding)
         {
             isSliding = true;
             StartCoroutine(Sliding());
         }
-        if (Input.GetMouseButtonUp(1))
+        if (!Input.GetMouseButton(1))
         {
             isSliding = false;
-            StopCoroutine(Sliding());
         }
 
         float h =  Input.GetAxisRaw("Horizontal");
@@ -205,16 +204,20 @@ public class Move : MonoBehaviour
 
     IEnumerator Sliding()
     {
+        float originalspeed = moveSpeed;
         moveSpeed = 500f;
-        while (moveSpeed > 0)
+        while (moveSpeed > originalspeed * 0.1f)
         {
             playerController.Stamina -= 1f;
-            if (!isSliding)
-                yield break;
+            if (playerController.StaminaEmpty || !Input.GetMouseButton(1))
+            {
+                break;
+            }
             moveSpeed *= 0.7f;
             yield return new WaitForSeconds(0.3f);
         }
-        yield break;
+        moveSpeed = originalspeed;
+        isSliding = false;
     }
 
     void Jump()

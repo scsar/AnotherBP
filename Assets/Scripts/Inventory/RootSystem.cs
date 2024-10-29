@@ -38,35 +38,46 @@ public class RootSystem : MonoBehaviour
     // itemcategory 와 weaphoncategory에는 각각 넣고자 하는 아이템의 식별코드를 작성한다.
     public void RandomRoot(int itemMaxvalue, List<int> itemcategory, List<int> weaphoncategory, Transform target)
     {
-        Debug.Log("함수 실행");
         int value = Random.Range(1, itemMaxvalue + 1);
         if (value < 0)
             value = 0;
 
         Debug.Log(value);
+        int wvalue;
         // 아이템 코드값을 받아와서 해당값으로 아이템에 대한 데이터를 가져온다.
-        int wvalue = value % 3;
-
-        for (int i = 0; i < value - wvalue; i++)
+        if (itemcategory.Count < 0)
         {
-            Debug.Log("아이템 생성..");
-            int itemidx = Random.Range(0, itemcategory.Count);
-            itemPrefeb.GetComponent<Item>().itemData = itemDictionary[itemcategory[itemidx]];
-            GameObject item = Instantiate(itemPrefeb);
-            item.transform.position = target.position;
-            StartCoroutine(WaitForGenerate(item));
-            item.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 5f), ForceMode2D.Impulse);
+            wvalue = value % 3;
+        }
+        else
+        {
+            wvalue = value;
         }
 
-        for (int i = 0; i < wvalue; i++)
+        if (itemcategory.Count > 0)
         {
-            Debug.Log("무기 생성...");
-            int weaphonidx = Random.Range(0, weaphoncategory.Count);
-            weaphonPrefeb.GetComponent<Weaphon>().weaphonData = weaphonDictionary[weaphoncategory[weaphonidx]];
-            GameObject weaphon = Instantiate(weaphonPrefeb);
-            weaphon.transform.position = target.position;
-            StartCoroutine(WaitForGenerate(weaphon));
-            weaphon.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 7f), ForceMode2D.Impulse);
+            for (int i = 0; i < value - wvalue; i++)
+            {
+                int itemidx = Random.Range(0, itemcategory.Count);
+                itemPrefeb.GetComponent<Item>().itemData = itemDictionary[itemcategory[itemidx]];
+                GameObject item = Instantiate(itemPrefeb);
+                item.transform.position = target.position;
+                StartCoroutine(WaitForGenerate(item));
+                item.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 5f), ForceMode2D.Impulse);
+            }
+        }
+        
+        if (weaphoncategory.Count > 0)
+        {
+            for (int i = 0; i < wvalue; i++)
+            {
+                int weaphonidx = Random.Range(0, weaphoncategory.Count);
+                weaphonPrefeb.GetComponent<Weaphon>().weaphonData = weaphonDictionary[weaphoncategory[weaphonidx]];
+                GameObject weaphon = Instantiate(weaphonPrefeb);
+                weaphon.transform.position = target.position;
+                StartCoroutine(WaitForGenerate(weaphon));
+                weaphon.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 7f), ForceMode2D.Impulse);
+            }
         }
     }
 
