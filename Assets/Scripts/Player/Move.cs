@@ -91,6 +91,7 @@ public class Move : MonoBehaviour
 
     private float moveSpeed = 150f;
     private float JumpForce = 10f;
+    private bool isGrounded = true;
 
     private PlayerController playerController;
 
@@ -124,7 +125,7 @@ public class Move : MonoBehaviour
             {
                 Throw();
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
                 Jump();
             }
@@ -145,6 +146,25 @@ public class Move : MonoBehaviour
         else
         {
             moveSpeed = 150;
+        }
+
+        if (isSliding || moveSpeed <= 150 || dir.x == 0)
+        {
+            animator.SetBool("isRun", false);
+        }
+        else if (!isSliding && moveSpeed > 150)
+        {
+            animator.SetBool("isRun", true);
+        }
+        
+
+        if (isGrounded)
+        {
+            animator.SetBool("isFalling", false);
+        }
+        if (!isGrounded)
+        {
+            animator.SetBool("isFalling", true);
         }
         
 
@@ -168,10 +188,12 @@ public class Move : MonoBehaviour
         if (Input.GetMouseButton(1) && !isSliding)
         {
             isSliding = true;
+            animator.SetTrigger("isSliding");
             StartCoroutine(Sliding());
         }
         if (!Input.GetMouseButton(1))
         {
+            animator.SetTrigger("noSliding");
             isSliding = false;
         }
 
@@ -192,14 +214,15 @@ public class Move : MonoBehaviour
             transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
         }
 
-        if (rigidbody2D.velocity.x != 0)
-        {
-            animator.SetBool("isWalk", true);
-        }
-        else
+        if (isSliding || moveSpeed < 150 || dir.x == 0)
         {
             animator.SetBool("isWalk", false);
         }
+        else if (!isSliding && moveSpeed <= 150)
+        {
+            animator.SetBool("isWalk", true);
+        }
+        
     }
 
     IEnumerator Sliding()
@@ -222,6 +245,8 @@ public class Move : MonoBehaviour
 
     void Jump()
     {
+        animator.SetTrigger("Jump");
+        isGrounded = false;
         playerController.Stamina -= 3f;
         rigidbody2D.AddForce(new Vector2(0, JumpForce) , ForceMode2D.Impulse);
     }
@@ -261,5 +286,13 @@ public class Move : MonoBehaviour
         // 인벤토리에서 던진무기의 정보를 갱신한다. (개수를 감소시키고 0이되면 인벤토리에서 제거한다.)
         inventory.gsisThrow = true;
         inventory.UpdateInventory(curWeaphon);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Field"))
+        {
+            isGrounded = true;
+        }
     }
 }
