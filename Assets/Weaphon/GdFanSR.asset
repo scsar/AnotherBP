@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: GdFan
   weaphonIcon: {fileID: 21300000, guid: e950f94d080ffd849b738214bfa7e39a, type: 3}
-  weaphonDamage: 0
+  weaphonDamage: 10
   weaphonCode: 14
   weaphonGrade: 3
   AbilityCode: 6

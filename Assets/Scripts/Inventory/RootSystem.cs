@@ -88,4 +88,16 @@ public class RootSystem : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         obj.GetComponent<CircleCollider2D>().enabled = true;
     }
+
+    public void GiveWeaphon(int WCode)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            weaphonPrefeb.GetComponent<Weaphon>().weaphonData = weaphonDictionary[WCode];
+            GameObject weaphon = Instantiate(weaphonPrefeb);
+            weaphon.transform.position = GameObject.FindWithTag("Player").transform.position;
+            StartCoroutine(WaitForGenerate(weaphon));
+            weaphon.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 7f), ForceMode2D.Impulse);
+        }
+    }
 }

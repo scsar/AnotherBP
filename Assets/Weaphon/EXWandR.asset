@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: ExWand
   weaphonIcon: {fileID: 21300000, guid: fe160608663303745a11eb859e532b0d, type: 3}
-  weaphonDamage: 0
+  weaphonDamage: 4
   weaphonCode: 5
   weaphonGrade: 2
   AbilityCode: 2

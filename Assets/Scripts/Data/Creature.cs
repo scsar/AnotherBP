@@ -26,6 +26,9 @@ public class Creature : MonoBehaviour
             {
                 hp = 0;
                 isDead = true;
+                animator.SetBool("isdie",isDead);
+                Destroy(Hp_bar);
+                Destroy(gameObject);
             }
         }
     }
@@ -37,6 +40,8 @@ public class Creature : MonoBehaviour
     private Transform canvas;
 
     public GameObject bloodEffect;
+
+    private Animator animator;
     
 
     // Start is called before the first frame update
@@ -54,46 +59,63 @@ public class Creature : MonoBehaviour
         agent.updateUpAxis = false;
 
         GetComponent<SpriteRenderer>().sprite = creature.CImage;
-        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();     
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        animator = GetComponent<Animator>();
+        isDead = false;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 _hpBarPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + 0.7f, 0));
-        Hp_barRT.position = _hpBarPos;
-
-        Cur_HP.fillAmount = hp/creature.CMaxhp;
-
-        if (Vector2.Distance(target.position, transform.position) < stopDistance)
+        if (!isDead)
         {
-            agent.destination = target.transform.position;
+            Vector3 _hpBarPos = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + 0.7f, 0));
+            Hp_barRT.position = _hpBarPos;
+
+            Cur_HP.fillAmount = hp/creature.CMaxhp;
+
+            if (Vector2.Distance(target.position, transform.position) < stopDistance)
+            {
+                animator.SetBool("isWalk", true);
+                agent.destination = target.position;
+            }
         }
+        
     }
 
     void FixedUpdate()
     {
-        if (target.position.x - transform.position.x > 0)
+        if(!isDead)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+            if (target.position.x - transform.position.x > 0)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
+            }
         }
-        else
-        {
-            transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
-        }
+        
        
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Weaphon") && other.GetComponent<Weaphon>().playerThrow)
+        if (!isDead)
         {
-            Weaphon weaphon = other.gameObject.GetComponent<Weaphon>();
-            C_hp -= weaphon.damage;
+            if (other.gameObject.CompareTag("Weaphon") && other.GetComponent<Weaphon>().playerThrow)
+            {
+                Weaphon weaphon = other.gameObject.GetComponent<Weaphon>();
+                C_hp -= weaphon.damage;
+                animator.SetTrigger("Hit");
 
-            weaphon.playerThrow = false;
+                weaphon.playerThrow = false;
+            }
         }
+        
     }
 
     public IEnumerator Df_blood(float power)

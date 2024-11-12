@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: Totch
   weaphonIcon: {fileID: -282070310, guid: 5f8ac713b5d81724b872ad68c9e8522e, type: 3}
-  weaphonDamage: 0
+  weaphonDamage: 2
   weaphonCode: 18
   weaphonGrade: 1
   AbilityCode: 0

@@ -100,6 +100,9 @@ public class Move : MonoBehaviour
     // 입력할 특정키를 저장할 배열 keys
     private DoubleKeyPressDetection[] keys;
 
+    private Collider2D collider1;
+    private Collider2D collider2;
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -107,11 +110,17 @@ public class Move : MonoBehaviour
         inventory = GameObject.FindWithTag("Inventory").GetComponent<Inventory>();
         playerController = GetComponent<PlayerController>();
         
-    keys = new[]
-    {
-        new DoubleKeyPressDetection(KeyCode.A),
-        new DoubleKeyPressDetection(KeyCode.D),
-    };
+        keys = new[]
+        {
+            new DoubleKeyPressDetection(KeyCode.A),
+            new DoubleKeyPressDetection(KeyCode.D),
+        };
+
+
+        Collider2D[] colliders = GetComponents<Collider2D>();
+        collider1 = colliders[0];
+        collider2 = colliders[1];
+        collider2.enabled = false;
     }
 
     // TODO
@@ -188,7 +197,8 @@ public class Move : MonoBehaviour
         if (Input.GetMouseButton(1) && !isSliding)
         {
             isSliding = true;
-            animator.SetTrigger("isSliding");
+            animator.SetBool("isSliding",true);
+            animator.SetTrigger("Tsliding");
             StartCoroutine(Sliding());
         }
         if (!Input.GetMouseButton(1))
@@ -227,6 +237,8 @@ public class Move : MonoBehaviour
 
     IEnumerator Sliding()
     {
+        collider1.enabled = false;
+        collider2.enabled = true;
         float originalspeed = moveSpeed;
         moveSpeed = 500f;
         while (moveSpeed > originalspeed * 0.1f)
@@ -241,6 +253,9 @@ public class Move : MonoBehaviour
         }
         moveSpeed = originalspeed;
         isSliding = false;
+        animator.SetBool("isSliding", false);
+        collider1.enabled = true;
+        collider2.enabled = false;
     }
 
     void Jump()

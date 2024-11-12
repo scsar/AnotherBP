@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: BlAxe
   weaphonIcon: {fileID: 21300000, guid: fb05e292c53d9314fa1b22f4d8b66ed1, type: 3}
-  weaphonDamage: 1
+  weaphonDamage: 5
   weaphonCode: 1
   weaphonGrade: 1
   AbilityCode: 1

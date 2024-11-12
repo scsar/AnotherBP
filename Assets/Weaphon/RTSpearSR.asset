@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: RtSpear
   weaphonIcon: {fileID: 853157367, guid: 9b134f8301b198443a39cc8a9330076f, type: 3}
-  weaphonDamage: 0
+  weaphonDamage: 20
   weaphonCode: 10
   weaphonGrade: 3
   AbilityCode: 7

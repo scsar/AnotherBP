@@ -32,4 +32,14 @@ public class Portal : MonoBehaviour
         PlayerPrefs.SetFloat("SavedY", transform.position.y - 1f);
         PlayerPrefs.SetInt("PortalId", SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void GameStart()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void GameExit()
+    {
+        Application.Quit();
+    }
 }

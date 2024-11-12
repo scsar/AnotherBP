@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: LtWand
   weaphonIcon: {fileID: 21300000, guid: 883afe313241db547a79b0010fedfb50, type: 3}
-  weaphonDamage: 0
+  weaphonDamage: 6
   weaphonCode: 9
   weaphonGrade: 3
   AbilityCode: 3

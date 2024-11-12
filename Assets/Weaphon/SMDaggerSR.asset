@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: SmDagger
   weaphonIcon: {fileID: 21300000, guid: 26c11ff34ff48bf43b4a905e3e53a200, type: 3}
-  weaphonDamage: 3
+  weaphonDamage: 7
   weaphonCode: 13
   weaphonGrade: 3
   AbilityCode: 4

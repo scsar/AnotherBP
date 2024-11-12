@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private TextMeshProUGUI talkText, nameText;
     [HideInInspector]
     public bool isTalk;
+    private bool isNpc;
+    private GameObject talkNpc;
     private string typeText = "";
     [HideInInspector] 
     public string ename;
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private GameObject Hpbar;
 
     private bool isDead;
+
 
     // 상호작용할 정보를 저장할 게임 오브젝트
     private GameObject InteractionObject = null;
@@ -72,6 +76,7 @@ public class PlayerController : MonoBehaviour
             {
                 _hp = 0;
                 isDead = true;
+                SceneManager.LoadScene(0);
             }
         }
     }
@@ -82,6 +87,7 @@ public class PlayerController : MonoBehaviour
         isDead = false;
 
         isTalk = false;
+        isNpc = false;
         talkImage.SetActive(false);
 		nameImage.SetActive(false);
 		talkText = talkImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -95,6 +101,11 @@ public class PlayerController : MonoBehaviour
         {
             // 어떤 오브젝트인지는 상관하지않고, InterAction함수를 수행한다.
             InteractionObject.GetComponent<IInteraction>().InterAction();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) && isNpc)
+        {
+            Inter(talkNpc);
         }
     }
 
@@ -131,9 +142,11 @@ public class PlayerController : MonoBehaviour
             // 해당오브젝트의 정보를 저장
             InteractionObject = collider.gameObject;
         }
-        if (collider.gameObject.CompareTag("NPC") && Input.GetKeyDown(KeyCode.E) && !isTalk)
+        if (collider.gameObject.CompareTag("NPC") && !isTalk)
         {
-            Inter(collider.gameObject);
+            isNpc = true;
+            talkNpc = collider.gameObject;
+            // Inter(collider.gameObject);
         }
     }
 
@@ -141,6 +154,9 @@ public class PlayerController : MonoBehaviour
     {
         // 아이템과 접촉해있지 않은경우 다시 해당값을 해제한다.
         InteractionObject = null;
+        
+        isNpc = false;
+        talkNpc = null;
     }
 
     void UpdateItemData(ItemData itemdata)

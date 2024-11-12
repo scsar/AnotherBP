@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaphonName: Stone
   weaphonIcon: {fileID: 21300138, guid: 7810966f0f690954c87305933cabf2b0, type: 3}
-  weaphonDamage: 0
+  weaphonDamage: 2
   weaphonCode: 20
   weaphonGrade: 1
   AbilityCode: 0
